@@ -4,10 +4,13 @@ import Drawing.Draw_Ingame;
 import Elements.Grid;
 import Global.Controller;
 import Global.Game;
+import Global.InGameLogic;
 import java.awt.Color;
 
 
 public class Controller_Ingame extends Controller{
+    
+    public static InGameLogic   GameLogic;
            
     public static final int     GridSize=50;
     public static final int     GridDrawStartPointX=10;
@@ -19,10 +22,58 @@ public class Controller_Ingame extends Controller{
     public static final int     TableSize=GridSize*GridSayisi;
     public static Grid[]        GridList=new Grid[GridSayisi*GridSayisi];
     
+    public static final String  Grid_Bos_Img=""; 
+    public static final String  Grid_Tas_Img="/arc/img/tas.png";
+    public static final String  Grid_Dama_Img="/arc/img/tas_dama.png";
+    public static final String  Grid_Click_Img="/arc/img/tas_selected.png";
+    
+    private short[][] tasCoords=new short[GridSayisi][GridSayisi];
+    
     
     public Controller_Ingame(){
     
         super(new Draw_Ingame());
+        
+        
+        ///Taşların bulunacağı koordinatlar
+        //aşağısı mysql e bağlanacak
+        tasCoords[1][0]=1;
+        tasCoords[1][1]=1;
+        tasCoords[1][2]=1;
+        tasCoords[1][3]=1;
+        tasCoords[1][4]=1;
+        tasCoords[1][5]=1;
+        tasCoords[1][6]=1;
+        tasCoords[1][7]=1;
+        
+        tasCoords[2][0]=1;
+        tasCoords[2][1]=1;
+        tasCoords[2][2]=1;
+        tasCoords[2][3]=1;
+        tasCoords[2][4]=1;
+        tasCoords[2][5]=1;
+        tasCoords[2][6]=1;
+        tasCoords[2][7]=1;
+        
+        tasCoords[5][0]=1;
+        tasCoords[5][1]=1;
+        tasCoords[5][2]=1;
+        tasCoords[5][3]=1;
+        tasCoords[5][4]=1;
+        tasCoords[5][5]=1;
+        tasCoords[5][6]=1;
+        tasCoords[5][7]=1;
+        
+        tasCoords[6][0]=1;
+        tasCoords[6][1]=1;
+        tasCoords[6][2]=1;
+        tasCoords[6][3]=1;
+        tasCoords[6][4]=2;
+        tasCoords[6][5]=1;
+        tasCoords[6][6]=1;
+        tasCoords[6][7]=1;
+        
+        
         
         
         ///Grid Düzeni Oluşturma
@@ -33,7 +84,14 @@ public class Controller_Ingame extends Controller{
             {
                 
                 Color gridColor=gridId%2==(posY%2)?Color.BLACK:Color.WHITE;
-                GridList[gridId++]=new Grid(gridId,posX,posY,GridDrawPointX,GridDrawPointY,gridColor);
+                GridList[gridId]=new Grid(gridId,posX,posY,GridDrawPointX,GridDrawPointY,gridColor);
+                GridList[gridId].owner=Game.GamePlayer;
+                
+                if(tasCoords[posY-1][posX-1]!=0)
+                    GridList[gridId].durum=tasCoords[posY-1][posX-1];
+                    
+                    
+                gridId++;
                 GridDrawPointX+=GridSize;
                 
             }
@@ -54,15 +112,9 @@ public class Controller_Ingame extends Controller{
         {           
            if(checkClick(GridList[i]))
            {
-               Grid tiklanan=GridList[i];
                
-               ////
-               
-               tiklanan.bgColor=Color.BLUE;
-               Game.UpdateFrame();
-               
-               ////      
-               
+               GameLogic.clickedOnGrid(GridList[i]);                
+                           
                break;
            }          
         }

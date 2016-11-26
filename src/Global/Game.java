@@ -19,13 +19,17 @@ public class Game {
     public static Controller        GameController;
     public static Display           GameWindow;
     public static MouseController   Mouse;
-    public static Player[]          Players;
+    public static Player            GamePlayer;
+    public static String            Opponent;
        
     public static void main(String[] args) {
         
         ///Görüntüyü Oluştur    
         GameWindow=new Display();
+        GamePlayer=new Player("FEApaydin");
+        
         GameController=new Controller_Ingame();
+        
           
         
     } 

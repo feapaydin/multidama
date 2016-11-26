@@ -6,10 +6,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import Elements.Grid;
 import Controller.Controller_Ingame;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 
 public class Draw_Ingame extends Draw{
     
+    private BufferedImage img;
 
     public void paint(Graphics g){
         
@@ -22,13 +26,40 @@ public class Draw_Ingame extends Draw{
             Grid currentGrid=Controller_Ingame.GridList[i];
             
             g.setColor(currentGrid.bgColor);
+            
+            if(Controller_Ingame.GameLogic.islenen!=null)
+                if(Controller_Ingame.GameLogic.islenen.ID==currentGrid.ID)
+                    g.setColor(Color.YELLOW);
+            
             g.fillRect(currentGrid.drawCoordX,currentGrid.drawCoordY,Controller_Ingame.GridSize,Controller_Ingame.GridSize);
             
-            g.setColor(Color.RED);
-            g.drawString(Integer.toString(currentGrid.ID), currentGrid.drawCoordX+5, currentGrid.drawCoordY+15);
-            g.drawString(currentGrid.posX+","+currentGrid.posY, currentGrid.drawCoordX+5, currentGrid.drawCoordY+30);
+                        
+            //Tas IMG
+            String yol=currentGrid.overrideImage;    
+                    
             
-            //BURAYA SWITCH ILE TAS RESMI GELECEK
+            if(yol.length()==0)
+                switch(currentGrid.durum)
+                {
+                    case 0:
+                        yol=Controller_Ingame.Grid_Bos_Img;
+                        break;
+                    case 1:
+                        yol=Controller_Ingame.Grid_Tas_Img;
+                        break;
+                    case 2:
+                        yol=Controller_Ingame.Grid_Dama_Img;
+                        break;
+                }
+            
+            try
+            {
+                img=ImageIO.read(getClass().getResourceAsStream(yol));               
+                g.drawImage(img,currentGrid.drawCoordX,currentGrid.drawCoordY,Controller_Ingame.GridSize,Controller_Ingame.GridSize,null);
+            }catch(IOException e)
+            {
+                e.printStackTrace();
+            }
             
         }
         
