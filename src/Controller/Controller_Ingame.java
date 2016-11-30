@@ -4,6 +4,7 @@ import Drawing.Draw_Ingame;
 import Elements.Grid;
 import Global.Controller;
 import Global.Game;
+import Global.GridCheck;
 import Global.InGameLogic;
 import java.awt.Color;
 
@@ -13,12 +14,14 @@ public class Controller_Ingame extends Controller{
     public static InGameLogic   GameLogic;
            
     public static final int     GridSize=50;
-    public static final int     GridDrawStartPointX=10;
-    public static final int     GridDrawStartPointY=10;
+    public static final int     GridSayisi=8;
+    
+    public static final int     GridDrawStartPointX=((Game.GameWindow.getWidth()-(GridSize*GridSayisi))/2)-10;
+    public static final int     GridDrawStartPointY=40;
     public static int           GridDrawPointX=GridDrawStartPointX;
     public static int           GridDrawPointY=GridDrawStartPointY;
     
-    public static final int     GridSayisi=8;
+    
     public static final int     TableSize=GridSize*GridSayisi;
     public static Grid[]        GridList=new Grid[GridSayisi*GridSayisi];
     
@@ -30,10 +33,9 @@ public class Controller_Ingame extends Controller{
     private short[][] tasCoords=new short[GridSayisi][GridSayisi];
     
     
-    public Controller_Ingame(){
-    
-        super(new Draw_Ingame());
+    public Controller_Ingame(){        
         
+        super(new Draw_Ingame());
         
         ///Taşların bulunacağı koordinatlar
         //aşağısı mysql e bağlanacak
@@ -88,9 +90,10 @@ public class Controller_Ingame extends Controller{
                 GridList[gridId].owner=Game.GamePlayer;
                 
                 if(tasCoords[posY-1][posX-1]!=0)
-                    GridList[gridId].durum=tasCoords[posY-1][posX-1];
-                    
-                    
+                    GridList[gridId].durum=tasCoords[posY-1][posX-1];               
+                
+                
+                
                 gridId++;
                 GridDrawPointX+=GridSize;
                 
@@ -98,7 +101,11 @@ public class Controller_Ingame extends Controller{
             
             GridDrawPointY+=GridSize;
             GridDrawPointX=GridDrawStartPointX;
-        }       
+        }
+        
+        
+        
+        
         
     }
       
@@ -110,32 +117,13 @@ public class Controller_Ingame extends Controller{
        
         for(int i=0; i<GridList.length; i++)
         {           
-           if(checkClick(GridList[i]))
-           {
-               
-               GameLogic.clickedOnGrid(GridList[i]);                
-                           
-               break;
-           }          
+           new Thread(new GridCheck(GridList[i])).start();      
         }
+        
+        
          
     }    
     
-    
-    
-    
-    //Tıklanan koordinatların hangi gride denk geldiğini ölçer
-    public static boolean checkClick(Grid g){        
-        if
-        (
-            Game.Mouse.x>g.drawCoordX && Game.Mouse.x<g.drawCoordX+GridSize 
-                && 
-            Game.Mouse.y>g.drawCoordY && Game.Mouse.y<g.drawCoordY+GridSize
-        )
-            return true;
-        else
-            return false;
-    }
     
     
     

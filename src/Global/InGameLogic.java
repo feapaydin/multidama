@@ -12,7 +12,7 @@ public class InGameLogic {
         if(g.durum!=0)
         {
             if(g.owner.ID==Game.GamePlayer.ID)
-                if(Game.GamePlayer.playTurn)
+                if(Game.PlayTurn==Game.GamePlayer.ID)
                     islenen=g;
         }
         

@@ -11,7 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
-public class Draw_Ingame extends Draw{
+public class Draw_Ingame extends Draw {
     
     private BufferedImage img;
 
@@ -35,7 +35,7 @@ public class Draw_Ingame extends Draw{
             
                         
             //Tas IMG
-            String yol=currentGrid.overrideImage;    
+            String yol="";
                     
             
             if(yol.length()==0)

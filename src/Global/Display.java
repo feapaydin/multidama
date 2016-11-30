@@ -1,31 +1,32 @@
 package Global;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import javax.swing.JFrame;
 
 
+
 public class Display extends JFrame{
+    
     
     
     Display(){
         
         ///Pencere Ayarları
         this.setVisible(true);
-        this.setSize(640,480);
+        this.setSize(800,600);
         this.setTitle("Multiplayer Dama by. Furkan Enes Apaydın");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        this.setLayout(new GridLayout(1,1,0,0));      
-
+        this.setLocationRelativeTo(null);        
+        
         
         ///Mouse Listener
-        MouseController MC=new MouseController(
-                this.getWidth()-this.getContentPane().getWidth()-3,
-                this.getHeight()-this.getContentPane().getHeight()-3
-        );
+        MouseController MC=new MouseController();
                 
         this.addMouseListener(Game.Mouse=MC);
+        
+       
         
         
     }   

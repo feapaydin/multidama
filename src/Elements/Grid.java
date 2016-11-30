@@ -20,8 +20,7 @@ public class Grid {
     
     public int drawCoordX;
     public int drawCoordY;
-    public Color bgColor;
-    public String overrideImage="";
+    public Color bgColor;    
     
         
     public Grid(int id, int xx, int yy, int dcX, int dcY, Color bgc){
