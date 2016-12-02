@@ -17,15 +17,27 @@ import Elements.Player;
 
 public class Game {
     
-
+    ///Server-side
+    public static String                Database_Host="127.0.0.1";
+    public static String                Database_User="root";
+    public static String                Database_User_Password="";
+    public static String                Database_Name="multidama";
+    
+    public static DatabaseController    GameDB;
+    public static String                GameName;
+    public static String                GamePassword;
+    public static int                   PlayTurn=1;
+    public static Player                GamePlayer;
+    public static Player                Opponent;
+    
+    
+    
+    ///Client-side
     public static Controller            GameController;
     public static Display               GameWindow;
     public static MouseController       Mouse;
     
-    public static DatabaseController    GameDB;
-    public static Player                GamePlayer;
-    public static String                Opponent;
-    public static int                   PlayTurn=1;
+
        
     public static void main(String[] args) {
         
@@ -34,7 +46,7 @@ public class Game {
         
         new Thread(new Runnable(){
             public void run(){
-                GameDB      =   new DatabaseController("127.0.0.1","multidama","root",""); 
+                GameDB      =   new DatabaseController(Database_Host,Database_Name,Database_User,Database_User_Password); 
             }
         }).start();
         
@@ -46,7 +58,8 @@ public class Game {
         
         
          
-        GamePlayer  =   new Player("FEApaydin");  
+        GamePlayer  =   new Player("FEApaydin",1);  
+        Opponent  =   new Player("caghan",2);  
                 
         
     } 

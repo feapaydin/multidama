@@ -29,6 +29,11 @@ public class Controller_Ingame extends Controller{
     public static final String  Grid_Tas_Img="/arc/img/tas.png";
     public static final String  Grid_Dama_Img="/arc/img/tas_dama.png";
     public static final String  Grid_Click_Img="/arc/img/tas_selected.png";
+    public static final String  Grid_Click_Dama_Img="/arc/img/tas_selected_dama.png";
+    public static final String  Grid_Moveable_Img="/arc/img/tas_moveable.png";
+    public static final String  Grid_Mustmove_Img="/arc/img/tas_mustmove.png";
+    public static final String  Grid_Tas_Dusman_Img="/arc/img/tas_opponent.png";
+    public static final String  Grid_Dama_Dusman_Img="/arc/img/tas_opponent_dama.png";
     
     private short[][] tasCoords=new short[GridSayisi][GridSayisi];
     
@@ -43,7 +48,7 @@ public class Controller_Ingame extends Controller{
         tasCoords[1][1]=1;
         tasCoords[1][2]=1;
         tasCoords[1][3]=1;
-        tasCoords[1][4]=1;
+
         tasCoords[1][5]=1;
         tasCoords[1][6]=1;
         tasCoords[1][7]=1;
@@ -60,9 +65,9 @@ public class Controller_Ingame extends Controller{
         tasCoords[5][0]=1;
         tasCoords[5][1]=1;
         tasCoords[5][2]=1;
-        tasCoords[5][3]=1;
-        tasCoords[5][4]=1;
-        tasCoords[5][5]=1;
+        //tasCoords[5][3]=1;
+        tasCoords[5][4]=2;
+        //tasCoords[5][5]=1;
         tasCoords[5][6]=1;
         tasCoords[5][7]=1;
         
@@ -70,7 +75,7 @@ public class Controller_Ingame extends Controller{
         tasCoords[6][1]=1;
         tasCoords[6][2]=1;
         tasCoords[6][3]=1;
-        tasCoords[6][4]=2;
+        tasCoords[6][4]=1;
         tasCoords[6][5]=1;
         tasCoords[6][6]=1;
         tasCoords[6][7]=1;
@@ -85,12 +90,18 @@ public class Controller_Ingame extends Controller{
             for(int posX=1; posX<=GridSayisi; posX++)
             {
                 
-                Color gridColor=gridId%2==(posY%2)?Color.BLACK:Color.WHITE;
+                Color gridColor=gridId%2==(posY%2)?Color.DARK_GRAY:Color.WHITE;
+                
                 GridList[gridId]=new Grid(gridId,posX,posY,GridDrawPointX,GridDrawPointY,gridColor);
-                GridList[gridId].owner=Game.GamePlayer;
+                
                 
                 if(tasCoords[posY-1][posX-1]!=0)
-                    GridList[gridId].durum=tasCoords[posY-1][posX-1];               
+                    GridList[gridId].durum=tasCoords[posY-1][posX-1];   
+                
+                if((posY-1==2 && posX-1==4))                
+                    GridList[gridId].owner=Game.Opponent;
+                else
+                    GridList[gridId].owner=Game.GamePlayer;
                 
                 
                 
