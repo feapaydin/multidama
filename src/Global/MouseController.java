@@ -40,8 +40,10 @@ public class MouseController implements MouseListener{
     @Override
     public void mousePressed(MouseEvent e) {
         recalculateMouse(e);       
-        Game.GameController.onClick();
-        //System.out.println("clicked "+Game.Mouse.x+","+Game.Mouse.y+" : "+e.getX()+","+e.getY()+" : "+LeftPadding+","+TopPadding);
+        
+        if(Game.GameController!=null)
+            Game.GameController.onClick();
+        
     }
 
     @Override

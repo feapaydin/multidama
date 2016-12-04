@@ -51,32 +51,33 @@ public class Draw_Ingame extends Draw {
                     
             
             if(yol.length()==0)
-                if(currentGrid.owner.ID==Game.GamePlayer.ID)
-                    switch(currentGrid.durum)
-                    {
-                        case 0:
-                            yol=Controller_Ingame.Grid_Bos_Img;
-                            break;
-                        case 1:
-                            yol=Controller_Ingame.Grid_Tas_Img;
-                            break;
-                        case 2:
-                            yol=Controller_Ingame.Grid_Dama_Img;
-                            break;
-                    }
-                else
-                    switch(currentGrid.durum)
-                    {
-                        case 0:
-                            yol=Controller_Ingame.Grid_Bos_Img;
-                            break;
-                        case 1:
-                            yol=Controller_Ingame.Grid_Tas_Dusman_Img;
-                            break;
-                        case 2:
-                            yol=Controller_Ingame.Grid_Dama_Dusman_Img;
-                            break;
-                    }
+                if(currentGrid.owner!=null)
+                    if(currentGrid.owner.ID==Game.GamePlayer.ID)
+                        switch(currentGrid.durum)
+                        {
+                            case 0:
+                                yol=Controller_Ingame.Grid_Bos_Img;
+                                break;
+                            case 1:
+                                yol=Controller_Ingame.Grid_Tas_Img;
+                                break;
+                            case 2:
+                                yol=Controller_Ingame.Grid_Dama_Img;
+                                break;
+                        }
+                    else
+                        switch(currentGrid.durum)
+                        {
+                            case 0:
+                                yol=Controller_Ingame.Grid_Bos_Img;
+                                break;
+                            case 1:
+                                yol=Controller_Ingame.Grid_Tas_Dusman_Img;
+                                break;
+                            case 2:
+                                yol=Controller_Ingame.Grid_Dama_Dusman_Img;
+                                break;
+                        }
             
             try
             {

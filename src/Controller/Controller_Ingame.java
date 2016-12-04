@@ -57,7 +57,8 @@ public class Controller_Ingame extends Controller{
         tasCoords[2][1]=1;
         tasCoords[2][2]=1;
         tasCoords[2][3]=1;
-        tasCoords[2][4]=1;
+        tasCoords[1][4]=1;
+        tasCoords[4][4]=2;
         tasCoords[2][5]=1;
         tasCoords[2][6]=1;
         tasCoords[2][7]=1;
@@ -66,7 +67,7 @@ public class Controller_Ingame extends Controller{
         tasCoords[5][1]=1;
         tasCoords[5][2]=1;
         //tasCoords[5][3]=1;
-        tasCoords[5][4]=2;
+        tasCoords[5][3]=2;
         //tasCoords[5][5]=1;
         tasCoords[5][6]=1;
         tasCoords[5][7]=1;
@@ -98,7 +99,7 @@ public class Controller_Ingame extends Controller{
                 if(tasCoords[posY-1][posX-1]!=0)
                     GridList[gridId].durum=tasCoords[posY-1][posX-1];   
                 
-                if((posY-1==2 && posX-1==4))                
+                if((posY-1==1 && posX-1==4) || (posY-1==4 && posX-1==4))                
                     GridList[gridId].owner=Game.Opponent;
                 else
                     GridList[gridId].owner=Game.GamePlayer;

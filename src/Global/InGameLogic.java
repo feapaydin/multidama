@@ -17,9 +17,84 @@ public class InGameLogic {
             if(g.owner.ID==Game.GamePlayer.ID)
                 if(Game.PlayTurn==Game.GamePlayer.ID)
                 {
-                    islenen=g;            
-                    checkMoveArea(g);
+                    if(g!=islenen)
+                    {                        
+                        islenen=g;            
+                        checkMoveArea(g);
+                    }
+                    else
+                    {
+                        islenen=null;
+                        moveable.clear();
+                        mustmove.clear();
+                    }
+                    g.yenecek=null;
                 }
+        }
+        else{
+        
+            if(moveable.contains(g))
+            {
+                moveable.clear();
+                mustmove.clear();
+                
+                g.durum=islenen.durum;
+                g.owner=islenen.owner;
+                islenen.durum=0;
+                islenen=null;
+                
+                //Dama ol
+                if(g.owner.host)
+                {
+                    if(g.posY==1)                    
+                        if(g.durum==1)
+                            g.durum=2;
+                    
+                }
+                else
+                {
+                    if(g.posY==Controller_Ingame.GridSayisi)
+                        if(g.durum==1)
+                            g.durum=2;
+                }
+                
+                ///LOSE TURN
+            }
+            
+            if(mustmove.contains(g))
+            {
+                moveable.clear();
+                mustmove.clear();
+                
+                g.durum=islenen.durum;
+                g.owner=islenen.owner;
+                islenen.durum=0;
+                islenen=null;
+                
+                ///Taş ye
+                if(g.yenecek!=null && g.yenecek!=g)
+                {                    
+                    g.yenecek.durum=0;
+                    g.yenecek.owner=null;  
+                    Game.Opponent.tasSayisi-=1;                    
+                } 
+                
+                //Dama ol
+                if(g.owner.host)
+                {
+                    if(g.posY==1)                    
+                        if(g.durum==1)
+                            g.durum=2;                    
+                }
+                else
+                {
+                    if(g.posY==Controller_Ingame.GridSayisi)
+                        if(g.durum==1)
+                            g.durum=2;
+                }
+                
+            }
+        
         }
         
         Game.UpdateFrame();
@@ -40,11 +115,11 @@ public class InGameLogic {
         else if(g.durum==2)
             distance=Controller_Ingame.GridSayisi;
         
-        isMoveable(g,"left",0,distance,false);
-        isMoveable(g,"right",0,distance,false);
-        isMoveable(g,g.owner.host?"up":"down",0,distance,false);
+        isMoveable(g,"left",0,distance,false,null);
+        isMoveable(g,"right",0,distance,false,null);
+        isMoveable(g,g.owner.host?"up":"down",0,distance,false,null);
         if(g.durum==2)
-            isMoveable(g,!g.owner.host?"up":"down",0,distance,false);
+            isMoveable(g,!g.owner.host?"up":"down",0,distance,false,null);
         
         if(!mustmove.isEmpty())
             moveable.clear();
@@ -66,14 +141,19 @@ public class InGameLogic {
     
     
     
-    public static void isMoveable(Grid g, String yon, int mevcutSira, int maxSira, boolean mustEaten)
+    public static void isMoveable(Grid g, String yon, int mevcutSira, int maxSira, boolean mustEaten, Grid ynck)
     {
         if(g.durum==0)
         {
             if(!mustEaten)
                 moveable.add(g);
-            else            
-                mustmove.add(g);
+            else           
+            {
+                if(ynck!=null)
+                    g.yenecek=ynck;
+                
+                mustmove.add(g);                
+            }
         }
         
         if(true)
@@ -89,23 +169,29 @@ public class InGameLogic {
                         return;
                     }
                     
+                    
                     Grid nextGrid=Controller_Ingame.GridList[nextGridId]; 
                     if(mevcutSira!=0)
                     {
+
+                            if(g.owner==Game.Opponent)
+                            {                        
+                                mustEaten=true;
+                                ynck=g;                                
+                            }
+                            else if(g.durum!=0 && g.owner==Game.GamePlayer)
+                                return;
+                            else if(islenen.durum!=2)
+                                return;
+                            else if(nextGrid.durum!=0 && mustEaten==true)
+                                return;
+                            
                         
-                        if(g.owner.ID==Game.Opponent.ID)
-                        {                        
-                            mustEaten=true;                                
-                        }
-                        else if(g.durum!=0 && g.owner.ID==Game.GamePlayer.ID)
-                            return;
-                        else if(islenen.durum!=2)
-                            return;
                         
                     }
 
                     if(nextGrid.ID!=g.ID)
-                        isMoveable(nextGrid,yon,mevcutSira+1,maxSira,mustEaten);                   
+                        isMoveable(nextGrid,yon,mevcutSira+1,maxSira,mustEaten,ynck);                   
                 }
             }
         }

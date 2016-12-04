@@ -23,7 +23,7 @@ public class Game {
     public static String                Database_User_Password="";
     public static String                Database_Name="multidama";
     
-    public static DatabaseController    GameDB;
+    
     public static String                GameName;
     public static String                GamePassword;
     public static int                   PlayTurn=1;
@@ -36,6 +36,7 @@ public class Game {
     public static Controller            GameController;
     public static Display               GameWindow;
     public static MouseController       Mouse;
+    public static DatabaseController    GameDB;
     
 
        
