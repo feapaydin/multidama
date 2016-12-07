@@ -20,17 +20,32 @@ public class Draw_Ingame extends Draw {
         ///Masa Çizimi
         g.drawRect(Controller_Ingame.GridDrawStartPointX-1,Controller_Ingame.GridDrawStartPointY-1,Controller_Ingame.TableSize+1,Controller_Ingame.TableSize+1);
         
+        //Kullanıcı Bilgileri
+        if(Game.Room!=null)
+            if(Game.Room.Start)
+            {
+                g.setColor(Color.BLACK);
+                if(Game.Room.PlayTurn==Game.GamePlayer.ID)
+                    g.setColor(Color.RED);
+                g.drawString(Game.GamePlayer.name,5,50);
+                
+                g.setColor(Color.BLACK);
+                if(Game.Room.PlayTurn==Game.Room.Opponent.ID)
+                    g.setColor(Color.RED);
+                g.drawString(Game.Room.Opponent.name,5,65);
+            }
         
         ///Development Build
         g.setColor(Color.BLACK);
-        g.drawString("Development Build", 5, 15);
+        g.drawString("Development Build", 1, 13);
         
         ///Grid Çizimi
+        if(Controller_Ingame.GridList[0]!=null)
         for(int i=0; i<Controller_Ingame.GridList.length; i++)
         {
-            Grid currentGrid=Controller_Ingame.GridList[i];
             
-            
+            Grid currentGrid=Controller_Ingame.GridList[i];  
+
             String yol="";
             g.setColor(currentGrid.bgColor);     
            
@@ -79,6 +94,9 @@ public class Draw_Ingame extends Draw {
                                 break;
                         }
             
+            
+                
+            
             try
             {
                 img=ImageIO.read(getClass().getResourceAsStream(yol));               
@@ -88,7 +106,9 @@ public class Draw_Ingame extends Draw {
                 e.printStackTrace();
             }
             
-           
+            g.setColor(Color.RED);
+            g.drawString(currentGrid.ID+"",currentGrid.drawCoordX+5,currentGrid.drawCoordY+15);
+            g.drawString(currentGrid.posX+","+currentGrid.posY,currentGrid.drawCoordX+5,currentGrid.drawCoordY+35);
             
         }
         

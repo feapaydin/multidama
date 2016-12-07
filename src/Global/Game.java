@@ -12,6 +12,7 @@ package Global;
 import Controller.*;
 import Drawing.*;
 import Elements.Player;
+import Elements.Room;
 
 
 
@@ -22,17 +23,11 @@ public class Game {
     public static String                Database_User="root";
     public static String                Database_User_Password="";
     public static String                Database_Name="multidama";
-    
-    
-    public static String                GameName;
-    public static String                GamePassword;
-    public static int                   PlayTurn=1;
     public static Player                GamePlayer;
-    public static Player                Opponent;
-    
-    
+
     
     ///Client-side
+    public static Room                  Room=null;
     public static Controller            GameController;
     public static Display               GameWindow;
     public static MouseController       Mouse;
@@ -58,10 +53,7 @@ public class Game {
         }).start();
         
         
-         
-        GamePlayer  =   new Player("FEApaydin",1);  
-        Opponent  =   new Player("caghan",2);  
-                
+        GamePlayer=new Player("theBreil",1); 
         
     } 
     
@@ -71,5 +63,10 @@ public class Game {
         GameController.DrawController.repaint();
     }    
     
+    //Herhangi bir sorun karşısında menüye dön
+    public static void ResetToMenu(){
+        //menüye resetle
+        System.out.println("Game resetted.");
+    }
     
 }

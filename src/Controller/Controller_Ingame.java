@@ -35,76 +35,20 @@ public class Controller_Ingame extends Controller{
     public static final String  Grid_Tas_Dusman_Img="/arc/img/tas_opponent.png";
     public static final String  Grid_Dama_Dusman_Img="/arc/img/tas_opponent_dama.png";
     
-    private short[][] tasCoords=new short[GridSayisi][GridSayisi];
-    
+   
     
     public Controller_Ingame(){        
-        
-        super(new Draw_Ingame());
-        
-        ///Taşların bulunacağı koordinatlar
-        //aşağısı mysql e bağlanacak
-        tasCoords[1][0]=1;
-        tasCoords[1][1]=1;
-        tasCoords[1][2]=1;
-        tasCoords[1][3]=1;
 
-        tasCoords[1][5]=1;
-        tasCoords[1][6]=1;
-        tasCoords[1][7]=1;
-        
-        tasCoords[2][0]=1;
-        tasCoords[2][1]=1;
-        tasCoords[2][2]=1;
-        tasCoords[2][3]=1;
-        tasCoords[1][4]=1;
-        tasCoords[4][4]=2;
-        tasCoords[2][5]=1;
-        tasCoords[2][6]=1;
-        tasCoords[2][7]=1;
-        
-        tasCoords[5][0]=1;
-        tasCoords[5][1]=1;
-        tasCoords[5][2]=1;
-        //tasCoords[5][3]=1;
-        tasCoords[5][3]=2;
-        //tasCoords[5][5]=1;
-        tasCoords[5][6]=1;
-        tasCoords[5][7]=1;
-        
-        tasCoords[6][0]=1;
-        tasCoords[6][1]=1;
-        tasCoords[6][2]=1;
-        tasCoords[6][3]=1;
-        tasCoords[6][4]=1;
-        tasCoords[6][5]=1;
-        tasCoords[6][6]=1;
-        tasCoords[6][7]=1;
-        
-        
-        
-        
+        super(new Draw_Ingame());
+     
         ///Grid Düzeni Oluşturma
+        /*
         int gridId=0;
         for(int posY=1; posY<=GridSayisi; posY++)
         {
             for(int posX=1; posX<=GridSayisi; posX++)
             {
-                
-                Color gridColor=gridId%2==(posY%2)?Color.DARK_GRAY:Color.WHITE;
-                
-                GridList[gridId]=new Grid(gridId,posX,posY,GridDrawPointX,GridDrawPointY,gridColor);
-                
-                
-                if(tasCoords[posY-1][posX-1]!=0)
-                    GridList[gridId].durum=tasCoords[posY-1][posX-1];   
-                
-                if((posY-1==1 && posX-1==4) || (posY-1==4 && posX-1==4))                
-                    GridList[gridId].owner=Game.Opponent;
-                else
-                    GridList[gridId].owner=Game.GamePlayer;
-                
-                
+       
                 
                 gridId++;
                 GridDrawPointX+=GridSize;
@@ -114,6 +58,7 @@ public class Controller_Ingame extends Controller{
             GridDrawPointY+=GridSize;
             GridDrawPointX=GridDrawStartPointX;
         }
+        */
         
         
         
@@ -127,11 +72,11 @@ public class Controller_Ingame extends Controller{
     //// ONCLICK
     public void onClick(){
        
-        for(int i=0; i<GridList.length; i++)
-        {           
-           new Thread(new GridCheck(GridList[i])).start();      
-        }
-        
+        if(Game.Room.Start)
+            for(int i=0; i<GridList.length; i++)
+            {           
+               new Thread(new GridCheck(GridList[i])).start();      
+            }  
         
          
     }    

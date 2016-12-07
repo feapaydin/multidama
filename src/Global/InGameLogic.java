@@ -9,13 +9,16 @@ public class InGameLogic {
     public static Grid islenen;
     public static ArrayList<Grid> moveable=new ArrayList<Grid>(); 
     public static ArrayList<Grid> mustmove=new ArrayList<Grid>();
-    
+
     public static void clickedOnGrid(Grid g){
         
+        Game.GameDB.getTurn();
+        
+        
         if(g.durum!=0)
-        {
+        {            
             if(g.owner.ID==Game.GamePlayer.ID)
-                if(Game.PlayTurn==Game.GamePlayer.ID)
+                if(Game.Room.PlayTurn==Game.GamePlayer.ID)
                 {
                     if(g!=islenen)
                     {                        
@@ -58,7 +61,10 @@ public class InGameLogic {
                             g.durum=2;
                 }
                 
-                ///LOSE TURN
+                if(Game.Room.Start)
+                    Game.GameDB.setTurn(Game.Room.Opponent.ID);
+                
+                
             }
             
             if(mustmove.contains(g))
@@ -76,7 +82,7 @@ public class InGameLogic {
                 {                    
                     g.yenecek.durum=0;
                     g.yenecek.owner=null;  
-                    Game.Opponent.tasSayisi-=1;                    
+                    Game.Room.Opponent.tasSayisi-=1;                    
                 } 
                 
                 //Dama ol
@@ -174,7 +180,7 @@ public class InGameLogic {
                     if(mevcutSira!=0)
                     {
 
-                            if(g.owner==Game.Opponent)
+                            if(g.owner==Game.Room.Opponent)
                             {                        
                                 mustEaten=true;
                                 ynck=g;                                
