@@ -10,6 +10,7 @@ public class Room {
     public String                GamePassword;
     public int                   PlayTurn;
     public Player                Opponent;
+    public int                   Winner=-1;
     
     public boolean               Start=false;
     

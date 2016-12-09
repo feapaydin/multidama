@@ -5,11 +5,13 @@ import Controller.Controller_Ingame;
 import Elements.*;
 import java.awt.Color;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import javax.swing.JOptionPane;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
 
 public class DatabaseController {
     
@@ -18,6 +20,8 @@ public class DatabaseController {
     public static boolean IsConnected=false;      
     
     public Connection Connection;    
+    
+    private static final DateFormat df = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
     
     
     DatabaseController(String h, String d, String u, String p){
@@ -32,6 +36,7 @@ public class DatabaseController {
             Connection=DriverManager.getConnection("jdbc:mysql://"+host+"/"+dbname,username,pass);             
             IsConnected=true;
             System.out.println("Veritabanı bağlantısı sağlandı.");
+            
             try{
                 RoomInit(1, "12344");
             }catch(Exception e){}
@@ -92,6 +97,7 @@ public class DatabaseController {
                                     System.out.println("Opponent (P2) yüklendi: "+opponent.getString("p_ad"));
                                     Game.Room.Opponent=new Player(opponent.getString("p_ad"),opponent.getInt("p_id"));
                                     Game.Room.startGame();
+                                    GetGameData();
                                     GetGridList();
                                 }
                                 else //Player2 Database'de Yok
@@ -121,8 +127,8 @@ public class DatabaseController {
                                 System.out.println("Opponent (P1) yüklendi: "+p1.getString("p_ad"));
                                 Game.Room.Opponent=new Player(p1.getString("p_ad"),p1.getInt("p_id"));
                                 Game.Room.startGame();
+                                GetGameData();
                                 GetGridList();
-                            
                             }
                             else if(rs.getInt("r_p2")==Game.GamePlayer.ID)           
                             {
@@ -130,8 +136,8 @@ public class DatabaseController {
                                 System.out.println("Opponent (P1) yüklendi: "+p1.getString("p_ad"));
                                 Game.Room.Opponent=new Player(p1.getString("p_ad"),p1.getInt("p_id"));
                                 Game.Room.startGame();
+                                GetGameData();
                                 GetGridList();
-                                
                             }
                             else //Spectator
                             {
@@ -173,7 +179,7 @@ public class DatabaseController {
     
     
     
-    
+    ///////////// IN-GAME FUNCS //////////////////////
     
     
     //Oda Gridleri Çekme
@@ -219,14 +225,12 @@ public class DatabaseController {
 
                             Controller_Ingame.GridList[gridId].durum=(short)rsg.getInt("g_durum");
 
-                            
-
 
                         }
                         
                                                 
                         rsg.close();
-                        System.out.println("Gridler Listelendi.");
+                        
                     
 
                     }
@@ -252,6 +256,7 @@ public class DatabaseController {
     } //End GetGridList()
     
     
+    //Sıra çek
     public int getTurn(){
         if(IsConnected)
         {
@@ -273,8 +278,10 @@ public class DatabaseController {
         }
         else
             return -1;
-    }
+    } //end getTurn()
     
+    
+    //Sıra değiştir
     public boolean setTurn(int playerId){
         if(IsConnected)
         {
@@ -308,7 +315,155 @@ public class DatabaseController {
         }
         else
             return false;
+    }//end setTurn()
+    
+    
+    
+    //Grid güncelle
+    public void UpdateGrid(Grid g)
+    {
+        if(IsConnected)
+        {
+            String query="UPDATE game_grids SET ";
+            query+="g_durum="+g.durum;
+            query+=",g_posX="+g.posX;
+            query+=",g_posY="+g.posY;
+            if(g.owner!=null)
+                query+=",g_owner="+g.owner.ID;
+            else
+                query+=",g_owner=0";
+            
+            query+=" WHERE g_roomId="+Game.Room.ID+" AND g_inGameId="+g.ID;
+        
+            try {
+                Connection.createStatement().executeUpdate(query);
+            } catch (SQLException ex) {
+                System.err.println("Update Hatası [x01]");
+            }
+        
+        }
+    }//end UpdateGrid()
+    
+    
+    //Son online update
+    public void UpdateLastOnline(){
+        if(IsConnected)
+        {            
+            String query="UPDATE game_players SET p_lastOnline='"+getCurrentDate()+"'";
+            query+=" WHERE p_id="+Game.GamePlayer.ID;
+            try {
+                Connection.createStatement().executeUpdate(query);
+            } catch (SQLException ex) {}
+            
+        }
+    }//end UpdateLastOnline()
+    
+    
+    //Taş sayısını servera yükle
+    public void UpdateTasSayisi(){
+        if(IsConnected)
+        {            
+            String query="UPDATE game_rooms SET ";
+            if(Game.GamePlayer.host)
+                query+="r_p2_tas="+Game.Room.Opponent.tasSayisi;
+            else
+                query+="r_p1_tas="+Game.Room.Opponent.tasSayisi;            
+            
+            
+            query+=" WHERE r_id="+Game.Room.ID;
+            
+            try {
+                Connection.createStatement().executeUpdate(query);
+            } catch (SQLException ex) {}
+            
+        }
+    }//end UpdateTasSayisi()
+    
+    
+    //Taş sayılarını servera göre güncelle
+    public void getTasSayisi(){
+        if(IsConnected)
+        {
+            String query="SELECT r_p1_tas, r_p2_tas FROM game_rooms WHERE r_id="+Game.Room.ID;
+            
+            try {
+                ResultSet rts=Connection.createStatement().executeQuery(query);
+                
+                if(rts.next())
+                {
+                    if(Game.GamePlayer.host)
+                    {
+                        Game.GamePlayer.tasSayisi=rts.getInt("r_p1_tas");
+                        Game.Room.Opponent.tasSayisi=rts.getInt("r_p2_tas");
+                    }
+                    else
+                    {
+                        Game.GamePlayer.tasSayisi=rts.getInt("r_p2_tas");
+                        Game.Room.Opponent.tasSayisi=rts.getInt("r_p1_tas");
+                    }
+                }
+                
+            } catch (SQLException ex) {}
+            
+            
+        }
+    }//end getTasSayisi()
+    
+    
+    
+    //Data Çek
+    public void GetGameData(){
+        if(IsConnected)
+        {           
+            UpdateLastOnline();
+            getTurn();
+            getTasSayisi();
+            
+            if(Game.Room.PlayTurn!=Game.GamePlayer.ID)
+                GetGridList();
+            
+            CheckWinner();
+            
+            
+            System.out.println("Game data fetched.");
+        }
+    }//end GetGameData()
+    
+    
+    //Tarihi string olarak al
+    public String getCurrentDate(){
+        Date d=new Date();
+        return df.format(d);        
+    }//end getCurrentDate();
+    
+    
+    
+    //Kazanan kontrol
+    public void CheckWinner(){
+        if(IsConnected)
+        {
+            if(Game.GamePlayer.tasSayisi==1)
+            {
+                Game.Room.Winner=Game.GamePlayer.ID;
+            }
+            else if(Game.Room.Opponent.tasSayisi==1)
+            {
+                Game.Room.Winner=Game.Room.Opponent.ID;
+            }
+            
+            System.out.println("Winner: "+Game.Room.Winner);
+            
+            try {
+                
+                Connection.createStatement().executeUpdate("UPDATE game_rooms SET r_winner="+Game.Room.Winner+" WHERE r_id="+Game.Room.ID);
+                //deleteRoom(Game.Room.ID);
+                
+            } catch (SQLException ex) {}
+            
+            
+        }
     }
+    
     
     
         

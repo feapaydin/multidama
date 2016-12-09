@@ -44,7 +44,8 @@ public class InGameLogic {
                 g.durum=islenen.durum;
                 g.owner=islenen.owner;
                 islenen.durum=0;
-                islenen=null;
+                islenen.owner=null;
+                
                 
                 //Dama ol
                 if(g.owner.host)
@@ -61,11 +62,15 @@ public class InGameLogic {
                             g.durum=2;
                 }
                 
-                if(Game.Room.Start)
-                    Game.GameDB.setTurn(Game.Room.Opponent.ID);
-                
+                Game.GameDB.UpdateGrid(islenen);
+                Game.GameDB.UpdateGrid(g);                
+                Game.GameDB.setTurn(Game.Room.Opponent.ID);
+                islenen=null;
                 
             }
+            
+            
+            /////
             
             if(mustmove.contains(g))
             {
@@ -75,14 +80,16 @@ public class InGameLogic {
                 g.durum=islenen.durum;
                 g.owner=islenen.owner;
                 islenen.durum=0;
-                islenen=null;
+                
                 
                 ///Taş ye
                 if(g.yenecek!=null && g.yenecek!=g)
                 {                    
                     g.yenecek.durum=0;
                     g.yenecek.owner=null;  
-                    Game.Room.Opponent.tasSayisi-=1;                    
+                    Game.GameDB.UpdateGrid(g.yenecek);
+                    Game.Room.Opponent.tasSayisi-=1;    
+                    Game.GameDB.UpdateTasSayisi();
                 } 
                 
                 //Dama ol
@@ -98,11 +105,16 @@ public class InGameLogic {
                         if(g.durum==1)
                             g.durum=2;
                 }
+                                
+                Game.GameDB.UpdateGrid(islenen);
+                Game.GameDB.UpdateGrid(g);
                 
+                islenen=null;
             }
         
         }
         
+        Game.GameDB.CheckWinner();        
         Game.UpdateFrame();
     
     }

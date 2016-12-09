@@ -8,13 +8,14 @@ import javax.swing.JFrame;
 
 public class Display extends JFrame{
     
-    
+    public static int window_width  = 800;
+    public static int window_height = 600;
     
     Display(){
         
         ///Pencere Ayarları
         this.setVisible(true);
-        this.setSize(800,600);
+        this.setSize(window_width,window_height);
         this.setTitle("Multiplayer Dama by. Furkan Enes Apaydın");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);

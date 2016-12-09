@@ -7,6 +7,8 @@ import Global.Game;
 import Global.GridCheck;
 import Global.InGameLogic;
 import java.awt.Color;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class Controller_Ingame extends Controller{
@@ -37,9 +39,13 @@ public class Controller_Ingame extends Controller{
     
    
     
+    private TimerTask ttask=new TimerTask(){public void run(){Game.GameDB.GetGameData();}};
+    private Timer tmr=new Timer();
+    
     public Controller_Ingame(){        
 
         super(new Draw_Ingame());
+        tmr.scheduleAtFixedRate(ttask, 1000, 5000);
      
         ///Grid Düzeni Oluşturma
         /*
@@ -77,9 +83,8 @@ public class Controller_Ingame extends Controller{
             {           
                new Thread(new GridCheck(GridList[i])).start();      
             }  
-        
-         
-    }    
+           
+    }
     
     
     

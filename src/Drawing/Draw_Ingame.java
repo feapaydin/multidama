@@ -17,8 +17,31 @@ public class Draw_Ingame extends Draw {
 
     public void paint(Graphics g){
         
+        g.clearRect(0, 0, Game.GameWindow.window_width, Game.GameWindow.window_height);
+        
         ///Masa Çizimi
         g.drawRect(Controller_Ingame.GridDrawStartPointX-1,Controller_Ingame.GridDrawStartPointY-1,Controller_Ingame.TableSize+1,Controller_Ingame.TableSize+1);
+        
+        //Oda bilgileri
+        if(Game.Room!=null)
+        {
+            g.drawString(Game.Room.GameName,5,50);
+            
+            if(Game.Room.Winner==Game.GamePlayer.ID)
+            {
+                g.setColor(Color.GREEN);
+                g.drawString("TEBRİKLER "+Game.GamePlayer.name+", KAZANDIN !",5,65);
+                Game.Room.Start=false;
+            }
+            
+            if(Game.Room.Winner==Game.Room.Opponent.ID)
+            {
+                g.setColor(Color.RED);
+                g.drawString(Game.Room.Opponent.name+" kazandı. KAYBETTİN!",5,65);
+                Game.Room.Start=false;
+            }
+            
+        }
         
         //Kullanıcı Bilgileri
         if(Game.Room!=null)
@@ -27,12 +50,12 @@ public class Draw_Ingame extends Draw {
                 g.setColor(Color.BLACK);
                 if(Game.Room.PlayTurn==Game.GamePlayer.ID)
                     g.setColor(Color.RED);
-                g.drawString(Game.GamePlayer.name,5,50);
+                g.drawString(Game.GamePlayer.name+"("+Game.GamePlayer.tasSayisi+")",5,70);
                 
                 g.setColor(Color.BLACK);
                 if(Game.Room.PlayTurn==Game.Room.Opponent.ID)
                     g.setColor(Color.RED);
-                g.drawString(Game.Room.Opponent.name,5,65);
+                g.drawString(Game.Room.Opponent.name+"("+Game.Room.Opponent.tasSayisi+")",5,85);
             }
         
         ///Development Build

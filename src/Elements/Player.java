@@ -7,7 +7,7 @@ public class Player {
     public boolean host;
     public boolean spectator=false;
     public int ID;
-    public int tasSayisi=16;
+    public int tasSayisi;
     
     public Player(String n,int ids){
         // Eğer bağlı olduğu oyunda player1 yok ise host olacak
