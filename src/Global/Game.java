@@ -33,8 +33,7 @@ public class Game {
     public static MouseController       Mouse;
     public static DatabaseController    GameDB;
     
-
-       
+         
     public static void main(String[] args) {
         
         ///Görüntüyü Oluştur    
@@ -48,12 +47,12 @@ public class Game {
         
         new Thread(new Runnable(){
             public void run(){
-                GameController= new Controller_Ingame();
+                GameController= new Controller_Login();
             }
         }).start();
         
         
-        GamePlayer=new Player("theBreil",1); 
+        
         
     } 
     
@@ -68,5 +67,7 @@ public class Game {
         //menüye resetle
         System.out.println("Game resetted.");
     }
+    
+    
     
 }

@@ -37,9 +37,6 @@ public class DatabaseController {
             IsConnected=true;
             System.out.println("Veritabanı bağlantısı sağlandı.");
             
-            try{
-                RoomInit(1, "12344");
-            }catch(Exception e){}
             
         }catch(Exception e)
         {            
