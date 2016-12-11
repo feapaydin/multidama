@@ -2,6 +2,7 @@ package Global;
 
 
 import Controller.Controller_Ingame;
+import Controller.Controller_Lobby;
 import Elements.*;
 import java.awt.Color;
 import java.sql.*;
@@ -139,7 +140,8 @@ public class DatabaseController {
                             else //Spectator
                             {
                                 Game.GamePlayer.spectator=true;
-                                System.out.println("Oyuncu Spectator");
+                                JOptionPane.showMessageDialog(null, "Oda dolu.");                               
+                                Game.ResetToMenu();
                             }
                             
                             

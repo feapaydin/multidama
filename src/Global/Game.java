@@ -64,8 +64,10 @@ public class Game {
     
     //Herhangi bir sorun karşısında menüye dön
     public static void ResetToMenu(){
-        //menüye resetle
-        System.out.println("Game resetted.");
+        
+        Game.GameController=new Controller_Lobby();
+        Game.Room=null;
+  
     }
     
     

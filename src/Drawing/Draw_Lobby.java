@@ -1,8 +1,11 @@
 package Drawing;
 
+import Controller.Controller_Lobby;
+import static Controller.Controller_Lobby.GameList;
 import Controller.Controller_Login;
-import Global.Game;
+import Elements.LobbyGame;
 import Global.Draw;
+import Global.Game;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -14,47 +17,47 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class Draw_Login extends Draw{
+
+public class Draw_Lobby extends Draw{
     
-    public Draw_Login(){        
+    public Draw_Lobby(){
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("/arc/font/georgia.ttf")));
         } catch (FontFormatException ex) {} catch (IOException ex) {}
         
         
-        repaint();    
         
+        repaint();
     }
 
-    
-    
+
     public void paint(Graphics g) {
-        
         
         g.setColor(Color.BLACK);
         g.fillRect(0,0,Game.GameWindow.window_width,Game.GameWindow.window_height);
+
+        loadFormBackground("/arc/img/forms/form_lobby.jpg",g);
         
-        g.setColor(Color.WHITE);
-        g.drawString("Development Build",5,15);
         
         
-        loadFormBackground("/arc/img/forms/form_login.jpg",g);
+        
         
         
         Font f=new Font("Georgia",Font.TRUETYPE_FONT,11);
         Color c=new Color(21,35,12);
         ortaliYazi("by. Furkan Enes Apaydın",Game.GameWindow.window_height-55,f,c,g);
-        ortaliYazi("İstanbul Gelişim Üniversitesi - 2016",Game.GameWindow.window_height-40,f,c,g);
-        
+        ortaliYazi("İstanbul Gelişim Üniversitesi - 2016",Game.GameWindow.window_height-40,f,c,g);       
        
-        ortaliYazi(Controller_Login.islemDurum,Game.GameWindow.window_height-155,f,Color.RED,g);
+        Controller_Lobby.btnBaglan.repaint();
+        Controller_Lobby.btnYarat.repaint();
         
-        
-        
-        
+        for(int i=0; i<GameList.size(); i++)
+        {
+            LobbyGame room=(LobbyGame)GameList.get(i);
+            room.repaint();
+        }
     }
-    
     
     
     
@@ -75,5 +78,7 @@ public class Draw_Login extends Draw{
             g.drawImage(img,(Game.GameWindow.window_width-img.getWidth())/2,50,img.getWidth(),img.getHeight(),null);
         } catch (IOException ex) {}
     }
+    
+    
     
 }

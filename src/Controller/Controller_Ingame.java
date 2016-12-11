@@ -39,12 +39,14 @@ public class Controller_Ingame extends Controller{
     
    
     
-    private TimerTask ttask=new TimerTask(){public void run(){Game.GameDB.GetGameData();}};
-    private Timer tmr=new Timer();
+    public static TimerTask ttask=new TimerTask(){public void run(){if(Game.GamePlayer.spectator==false) Game.GameDB.GetGameData();}};
+    public static Timer tmr=new Timer();
     
     public Controller_Ingame(){        
 
         super(new Draw_Ingame());
+        
+        if(Game.GamePlayer.spectator==false)
         tmr.scheduleAtFixedRate(ttask, 1000, 5000);
      
         ///Grid Düzeni Oluşturma

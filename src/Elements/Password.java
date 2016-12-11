@@ -1,26 +1,22 @@
+
 package Elements;
 
 import java.awt.Color;
-import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 
-public class TextField extends JTextField {
+
+public class Password extends JPasswordField{
     
-    public TextField(int posX, int posY, int width, int height){
-        
-        setSize(width,height);  
+    public Password(int posX, int posY, int width, int height){
+        setSize(width, height);  
         setLocation(posX,posY);
         setBackground(new Color(39,39,14));
         //setBackground(Color.RED);
         setBorder(null);
         setForeground(Color.WHITE);
-        
-        
+
+
         repaint();
-        
     }
-    
-    
-    
-    
     
 }

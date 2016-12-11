@@ -1,6 +1,7 @@
 package Global;
 
 import java.awt.Color;
+
 import javax.swing.JFrame;
 
 
@@ -20,6 +21,7 @@ public class Display extends JFrame{
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);      
+        this.setLayout(null);        
         content_width=getContentPane().getWidth();
         content_height=getContentPane().getHeight();
         

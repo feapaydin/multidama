@@ -4,6 +4,7 @@ import Global.Game;
 import Global.Controller;
 import Drawing.Draw_Login;
 import Elements.Button;
+import Elements.Password;
 import Elements.Player;
 import Elements.TextField;
 import java.awt.event.ActionEvent;
@@ -17,7 +18,7 @@ import java.sql.SQLException;
 public class Controller_Login extends Controller{
     
     public static TextField tfAd;
-    public static TextField tfSifre;
+    public static Password  tfSifre;
     public static Button    btnGiris;
     
     public static String    islemDurum="";
@@ -26,8 +27,8 @@ public class Controller_Login extends Controller{
         
         super(new Draw_Login());
 
-        tfAd=new TextField((Game.GameWindow.window_width/2)-82,262);
-        tfSifre=new TextField((Game.GameWindow.window_width/2)-82,323);
+        tfAd=new TextField((Game.GameWindow.window_width/2)-82,262,165,25);
+        tfSifre=new Password((Game.GameWindow.window_width/2)-82,323,165,25);
         btnGiris=new Button("Giriş",(Game.GameWindow.window_width/2)-60,380,111,22);
         
                 
@@ -41,11 +42,13 @@ public class Controller_Login extends Controller{
         
         btnGiris.addActionListener(new ActionListener(){
             
+            @Override
             public void actionPerformed(ActionEvent e) {
                 
                 String kAd=tfAd.getText();
                 String kSifre=tfSifre.getText();
                 
+                                
                 if(Game.GamePlayer==null)
                 {
                     if(Game.GameDB.IsConnected)
@@ -69,7 +72,8 @@ public class Controller_Login extends Controller{
                                 
                                 btnGiris.setVisible(false);
                                 
-                                ///Controller değiştir
+                                Game.GameController=new Controller_Lobby();
+                                
                             }
                             else
                             {
