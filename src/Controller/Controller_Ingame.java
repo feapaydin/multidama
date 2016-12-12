@@ -1,14 +1,18 @@
 package Controller;
 
 import Drawing.Draw_Ingame;
+import Elements.Button;
 import Elements.Grid;
 import Global.Controller;
 import Global.Game;
 import Global.GridCheck;
 import Global.InGameLogic;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.JOptionPane;
 
 
 public class Controller_Ingame extends Controller{
@@ -18,8 +22,8 @@ public class Controller_Ingame extends Controller{
     public static final int     GridSize=50;
     public static final int     GridSayisi=8;
     
-    public static final int     GridDrawStartPointX=((Game.GameWindow.getWidth()-(GridSize*GridSayisi))/2)-10;
-    public static final int     GridDrawStartPointY=40;
+    public static final int     GridDrawStartPointX=((Game.GameWindow.getWidth()-(GridSize*GridSayisi))/2);
+    public static final int     GridDrawStartPointY=146;
     public static int           GridDrawPointX=GridDrawStartPointX;
     public static int           GridDrawPointY=GridDrawStartPointY;
     
@@ -39,39 +43,47 @@ public class Controller_Ingame extends Controller{
     
    
     
-    public static TimerTask ttask=new TimerTask(){public void run(){if(Game.GamePlayer.spectator==false) Game.GameDB.GetGameData();}};
-    public static Timer tmr=new Timer();
+    public TimerTask ttask=new TimerTask(){public void run(){if(Game.GamePlayer.spectator==false && Game.Room!=null) Game.GameDB.GetGameData();}};
+    public static Timer tmr;
+    
+    public static Button btnPeset;
+    public static Button btnLobiyedon;
     
     public Controller_Ingame(){        
 
         super(new Draw_Ingame());
-        
-        if(Game.GamePlayer.spectator==false)
+
+        tmr=new Timer();
         tmr.scheduleAtFixedRate(ttask, 1000, 5000);
-     
-        ///Grid Düzeni Oluşturma
-        /*
-        int gridId=0;
-        for(int posY=1; posY<=GridSayisi; posY++)
-        {
-            for(int posX=1; posX<=GridSayisi; posX++)
-            {
-       
-                
-                gridId++;
-                GridDrawPointX+=GridSize;
-                
+        
+        btnPeset=new Button("Pes Et",Game.GameWindow.window_width-150-30,450,150,25);
+        btnLobiyedon=new Button("Lobiye Dön",Game.GameWindow.window_width-150-30,485,150,25);
+        Game.GameWindow.add(btnPeset);
+        Game.GameWindow.add(btnLobiyedon);
+        
+        btnPeset.repaint();
+        btnLobiyedon.repaint();
+        
+        btnPeset.addActionListener(new ActionListener(){
+            
+            public void actionPerformed(ActionEvent e) {
+                if(Game.Room.Opponent!=null)
+                    Game.GameDB.pesEt();                
+                else
+                    JOptionPane.showMessageDialog(null,"Rakip bağlanmadan pes edemezsiniz.");
             }
             
-            GridDrawPointY+=GridSize;
-            GridDrawPointX=GridDrawStartPointX;
-        }
-        */
+        });
         
+        btnLobiyedon.addActionListener(new ActionListener(){
+           
+            public void actionPerformed(ActionEvent e) {
+                Game.ResetToMenu();
+            }
         
-        
-        
-        
+        });
+             
+
     }
       
     
@@ -86,6 +98,7 @@ public class Controller_Ingame extends Controller{
                new Thread(new GridCheck(GridList[i])).start();      
             }  
            
+        
     }
     
     

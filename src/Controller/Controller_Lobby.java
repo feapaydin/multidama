@@ -19,6 +19,7 @@ public class Controller_Lobby extends Controller{
     public static Password  pwSifre;
     public static Button    btnBaglan;
     public static Button    btnYarat;
+    public static Button    btnYenile;
     
     public static LobbyGame selected=null;
 
@@ -34,6 +35,17 @@ public class Controller_Lobby extends Controller{
             pwSifre=new Password(565,350,100,20);
             btnBaglan=new Button("Oyuna Bağlan",560,390,112,24);
             btnYarat=new Button("Oyun Oluştur",560,250,112,24);
+            btnYenile=new Button("Yenile",560,280,112,24);
+            
+            btnYarat.addActionListener(new ActionListener(){
+                
+                public void actionPerformed(ActionEvent e) {
+                   Game.GameController=new Controller_CreateRoom();
+                   Game.UpdateFrame();
+                }
+            
+            });
+            
             
             btnBaglan.addActionListener(new ActionListener(){
                 
@@ -47,8 +59,7 @@ public class Controller_Lobby extends Controller{
                             if(selected.sifre.equals(sifre))
                             {
                                 Game.GameDB.RoomInit(selected.ID,selected.sifre);
-                                Game.GameController=new Controller_Ingame();
-                                Game.UpdateFrame();
+                                
                             }
                             else
                             {
@@ -70,10 +81,20 @@ public class Controller_Lobby extends Controller{
             });
 
             
+            btnYenile.addActionListener(new ActionListener(){
+                
+                public void actionPerformed(ActionEvent e) {
+                    Game.GameController=new Controller_Lobby();
+                    Game.UpdateFrame();
+                }
+                
+            });
+            
             
             Game.GameWindow.add(pwSifre);
             Game.GameWindow.add(btnBaglan);
             Game.GameWindow.add(btnYarat);
+            Game.GameWindow.add(btnYenile);
            
             if(Game.GameDB.IsConnected)
             {

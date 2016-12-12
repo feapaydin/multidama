@@ -35,8 +35,7 @@ public class Draw_Login extends Draw{
         g.setColor(Color.BLACK);
         g.fillRect(0,0,Game.GameWindow.window_width,Game.GameWindow.window_height);
         
-        g.setColor(Color.WHITE);
-        g.drawString("Development Build",5,15);
+       
         
         
         loadFormBackground("/arc/img/forms/form_login.jpg",g);

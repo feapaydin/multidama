@@ -47,7 +47,7 @@ public class Game {
         
         new Thread(new Runnable(){
             public void run(){
-                GameController= new Controller_Login();
+                GameController= new Controller_Opening();
             }
         }).start();
         
@@ -65,8 +65,9 @@ public class Game {
     //Herhangi bir sorun karşısında menüye dön
     public static void ResetToMenu(){
         
-        Game.GameController=new Controller_Lobby();
-        Game.Room=null;
+        GameController=new Controller_Lobby();
+        Room=null;
+        UpdateFrame();
   
     }
     
