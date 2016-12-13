@@ -23,7 +23,7 @@ public class Draw_Lobby extends Draw{
     public Draw_Lobby(){
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("/arc/font/georgia.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("/Arc/font/georgia.ttf")));
         } catch (FontFormatException ex) {} catch (IOException ex) {}
         
         
@@ -37,7 +37,7 @@ public class Draw_Lobby extends Draw{
         g.setColor(Color.BLACK);
         g.fillRect(0,0,Game.GameWindow.window_width,Game.GameWindow.window_height);
 
-        loadFormBackground("/arc/img/forms/form_lobby.jpg",g);
+        loadFormBackground("/Arc/img/forms/form_lobby.jpg",g);
         
         
         

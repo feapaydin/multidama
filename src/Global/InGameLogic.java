@@ -11,10 +11,7 @@ public class InGameLogic {
     public static ArrayList<Grid> mustmove=new ArrayList<Grid>();
 
     public static void clickedOnGrid(Grid g){
-        
-        Game.GameDB.getTurn();
-        
-        
+
         if(g.durum!=0)
         {            
             if(g.owner.ID==Game.GamePlayer.ID)
@@ -80,6 +77,7 @@ public class InGameLogic {
                 g.durum=islenen.durum;
                 g.owner=islenen.owner;
                 islenen.durum=0;
+                islenen.owner=null;
                 
                 
                 ///Taş ye
@@ -90,6 +88,8 @@ public class InGameLogic {
                     Game.GameDB.UpdateGrid(g.yenecek);
                     Game.Room.Opponent.tasSayisi-=1;    
                     Game.GameDB.UpdateTasSayisi();
+                    
+                    g.yenecek=null;
                 } 
                 
                 //Dama ol
@@ -109,7 +109,18 @@ public class InGameLogic {
                 Game.GameDB.UpdateGrid(islenen);
                 Game.GameDB.UpdateGrid(g);
                 
-                islenen=null;
+                islenen=g;
+                
+                checkMoveArea(g);
+                if(mustmove.size()==0)
+                {                
+                    islenen=null;
+                    Game.GameDB.setTurn(Game.Room.Opponent.ID);
+                    moveable.clear();
+                    mustmove.clear();
+                }
+
+                
             }
         
         }
@@ -172,9 +183,9 @@ public class InGameLogic {
                 
                 mustmove.add(g);                
             }
-        }
+        }        
         
-        if(true)
+        if(!mustEaten || (mustEaten && islenen.durum==2 && g.durum==0))
         {            
             if(mevcutSira<maxSira)
             {          
@@ -195,7 +206,7 @@ public class InGameLogic {
                             if(g.owner==Game.Room.Opponent)
                             {                        
                                 mustEaten=true;
-                                ynck=g;                                
+                                ynck=g;
                             }
                             else if(g.durum!=0 && g.owner==Game.GamePlayer)
                                 return;

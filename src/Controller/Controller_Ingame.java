@@ -10,6 +10,7 @@ import Global.InGameLogic;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JOptionPane;
@@ -32,19 +33,19 @@ public class Controller_Ingame extends Controller{
     public static Grid[]        GridList=new Grid[GridSayisi*GridSayisi];
     
     public static final String  Grid_Bos_Img=""; 
-    public static final String  Grid_Tas_Img="/arc/img/tas.png";
-    public static final String  Grid_Dama_Img="/arc/img/tas_dama.png";
-    public static final String  Grid_Click_Img="/arc/img/tas_selected.png";
-    public static final String  Grid_Click_Dama_Img="/arc/img/tas_selected_dama.png";
-    public static final String  Grid_Moveable_Img="/arc/img/tas_moveable.png";
-    public static final String  Grid_Mustmove_Img="/arc/img/tas_mustmove.png";
-    public static final String  Grid_Tas_Dusman_Img="/arc/img/tas_opponent.png";
-    public static final String  Grid_Dama_Dusman_Img="/arc/img/tas_opponent_dama.png";
+    public static final String  Grid_Tas_Img="/Arc/img/tas.png";
+    public static final String  Grid_Dama_Img="/Arc/img/tas_dama.png";
+    public static final String  Grid_Click_Img="/Arc/img/tas_selected.png";
+    public static final String  Grid_Click_Dama_Img="/Arc/img/tas_selected_dama.png";
+    public static final String  Grid_Moveable_Img="/Arc/img/tas_moveable.png";
+    public static final String  Grid_Mustmove_Img="/Arc/img/tas_mustmove.png";
+    public static final String  Grid_Tas_Dusman_Img="/Arc/img/tas_opponent.png";
+    public static final String  Grid_Dama_Dusman_Img="/Arc/img/tas_opponent_dama.png";
     
    
     
     public TimerTask ttask=new TimerTask(){public void run(){if(Game.GamePlayer.spectator==false && Game.Room!=null) Game.GameDB.GetGameData();}};
-    public static Timer tmr;
+    public Timer tmr;
     
     public static Button btnPeset;
     public static Button btnLobiyedon;
@@ -52,9 +53,11 @@ public class Controller_Ingame extends Controller{
     public Controller_Ingame(){        
 
         super(new Draw_Ingame());
+        
+        GridList=new Grid[GridSayisi*GridSayisi];
 
         tmr=new Timer();
-        tmr.scheduleAtFixedRate(ttask, 1000, 5000);
+        tmr.scheduleAtFixedRate(ttask, 1000, 3000);
         
         btnPeset=new Button("Pes Et",Game.GameWindow.window_width-150-30,450,150,25);
         btnLobiyedon=new Button("Lobiye Dön",Game.GameWindow.window_width-150-30,485,150,25);

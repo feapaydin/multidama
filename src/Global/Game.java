@@ -19,10 +19,19 @@ import Elements.Room;
 public class Game {
     
     ///Server-side
+    /*
     public static String                Database_Host="127.0.0.1";
     public static String                Database_User="root";
     public static String                Database_User_Password="";
     public static String                Database_Name="multidama";
+    */
+    
+    public static String                Database_Host="92.42.34.49";
+    public static String                Database_User="mdama_u_121216";
+    public static String                Database_User_Password="mdp@2016!_";
+    public static String                Database_Name="enes_multidama";
+    
+    
     public static Player                GamePlayer;
 
     

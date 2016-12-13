@@ -19,7 +19,7 @@ public class Draw_CreateRoom extends Draw{
     public Draw_CreateRoom(){        
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("/arc/font/georgia.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("/Arc/font/georgia.ttf")));
         } catch (FontFormatException ex) {} catch (IOException ex) {}
         
         
@@ -37,7 +37,7 @@ public class Draw_CreateRoom extends Draw{
         
               
         
-        loadFormBackground("/arc/img/forms/form_createroom.jpg",g);
+        loadFormBackground("/Arc/img/forms/form_createroom.jpg",g);
         
         
         Font f=new Font("Georgia",Font.TRUETYPE_FONT,11);

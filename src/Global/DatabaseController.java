@@ -25,7 +25,7 @@ public class DatabaseController {
     
     public Connection Connection;    
     
-    private static final DateFormat df = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
+    public static final DateFormat df = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
     
     
     DatabaseController(String h, String d, String u, String p){
@@ -193,7 +193,7 @@ public class DatabaseController {
     
     //Oda Gridleri Çekme
     public void GetGridList(){
-        if(IsConnected  && roomExists())
+        if(IsConnected  && roomExists() && opponentExists())
         {        
             int GameId=Game.Room.ID;
             try {
@@ -237,6 +237,8 @@ public class DatabaseController {
 
                         }
                         
+                        getTurn();
+                                    
                                                 
                         rsg.close();
                         
@@ -259,7 +261,7 @@ public class DatabaseController {
             }      
             
             Game.UpdateFrame();            
-
+            
         }
         
     } //End GetGridList()
@@ -274,8 +276,8 @@ public class DatabaseController {
                 ResultSet rt=Connection.createStatement().executeQuery("SELECT r_turn FROM game_rooms WHERE r_id="+Game.Room.ID);
                 if(rt.next())          
                 {
-                    Game.Room.PlayTurn=rt.getInt("r_turn");
-                    return rt.getInt("r_turn");  
+                    Game.Room.PlayTurn=rt.getInt("r_turn");                    
+                    return rt.getInt("r_turn");                      
                 }
                 else
                     return -1;
@@ -284,6 +286,7 @@ public class DatabaseController {
             {
                 return -1;
             }
+            
         }
         else
             return -1;
@@ -292,7 +295,7 @@ public class DatabaseController {
     
     //Sıra değiştir
     public boolean setTurn(int playerId){
-        if(IsConnected  && roomExists())
+        if(IsConnected  && roomExists() && opponentExists())
         {
             if(Game.Room.PlayTurn==Game.GamePlayer.ID)
             {
@@ -304,7 +307,7 @@ public class DatabaseController {
                         query+="r_p1="+Game.Room.Opponent.ID+" AND r_p2="+Game.GamePlayer.ID;
                     
                     Game.Room.PlayTurn=playerId;
-                    
+                    System.out.println("Turn Setted.");
                     if(Connection.createStatement().executeUpdate(query)>0)
                         return true;
                     else
@@ -331,7 +334,7 @@ public class DatabaseController {
     //Grid güncelle
     public void UpdateGrid(Grid g)
     {
-        if(IsConnected  && roomExists())
+        if(IsConnected  && roomExists() && opponentExists())
         {
             String query="UPDATE game_grids SET ";
             query+="g_durum="+g.durum;
@@ -370,7 +373,7 @@ public class DatabaseController {
     
     //Taş sayısını servera yükle
     public void UpdateTasSayisi(){
-        if(IsConnected  && roomExists())
+        if(IsConnected  && roomExists() && opponentExists())
         {            
             String query="UPDATE game_rooms SET ";
             if(Game.GamePlayer.host)
@@ -391,14 +394,14 @@ public class DatabaseController {
     
     //Taş sayılarını servera göre güncelle
     public void getTasSayisi(){
-        if(IsConnected  && roomExists())
+        if(IsConnected  && roomExists() && opponentExists())
         {
             String query="SELECT r_p1_tas, r_p2_tas FROM game_rooms WHERE r_id="+Game.Room.ID;
             
             try {
                 ResultSet rts=Connection.createStatement().executeQuery(query);
                 
-                if(rts.next())
+                if(rts.next() && roomExists())
                 {
                     if(Game.GamePlayer.host)
                     {
@@ -422,7 +425,7 @@ public class DatabaseController {
     
     
     public boolean roomExists(){
-        if(IsConnected && Game.Room!=null && opponentExists())
+        if(IsConnected && Game.Room!=null)
         {
             ResultSet game;
             try {
@@ -454,7 +457,26 @@ public class DatabaseController {
                 if(game.next())
                 {
                     if(game.getInt("r_p2")!=-1)
+                    {
+                        if(Game.Room.Opponent==null)
+                        {
+                            int opid=game.getInt("r_p2");
+                            game.close();
+                            
+                            
+                            ResultSet oprs=Connection.createStatement().executeQuery("SELECT * FROM game_players WHERE p_id="+opid);                            
+                            if(oprs.next()){
+                                Game.Room.Opponent=new Player(oprs.getString("p_ad"),oprs.getInt("p_id")); 
+                                Game.Room.startGame();
+                                GetGridList();
+                                GetGameData();                            
+                                
+                            }
+                        }
+                                    
+                        
                         return true;
+                    }
                     else
                         return false;
                 }
@@ -463,8 +485,11 @@ public class DatabaseController {
 
 
             } catch (SQLException ex) {
+                System.out.println("err update opponent: "+ex.getMessage());
                 return false;
             }
+            
+            
         }
         else
             return false;
@@ -475,28 +500,35 @@ public class DatabaseController {
     
     //Data Çek
     public void GetGameData(){
-        if(IsConnected && opponentExists())
+        if(IsConnected)
         {           
                 if(roomExists())
                 {
                     UpdateLastOnline();
-                    getTurn();
+                    
                     getTasSayisi();
 
-                    if(Game.Room.PlayTurn!=Game.GamePlayer.ID)
+                    if(Controller_Ingame.GameLogic.islenen==null)
                         GetGridList();
 
                     CheckWinner();        
-                                        
+                    System.out.println("GameData Güncellendi.");                    
+                                    
                 }
                 else
                 {
+                    if(Game.GamePlayer.tasSayisi>Game.Room.Opponent.tasSayisi)
+                        JOptionPane.showMessageDialog(null, "Oyun Bitti, siz kazandınız "+Game.GamePlayer.name+" !!");
+                    else if(Game.GamePlayer.tasSayisi<Game.Room.Opponent.tasSayisi)
+                        JOptionPane.showMessageDialog(null, "Oyun Bitti, KAYBETTİN ! ");
+                    else
+                        JOptionPane.showMessageDialog(null, "Oyun Bitti.");
+                    
+                    
                     Game.GameController=new Controller_Lobby();
                     Game.Room=null;
 
                     Game.UpdateFrame();
-
-                    JOptionPane.showMessageDialog(null, "Oyun Bitti, Siz Kazandınız "+Game.GamePlayer.name+" !");
                 }
             
         
@@ -515,7 +547,7 @@ public class DatabaseController {
     
     //Kazanan kontrol
     public void CheckWinner(){
-        if(IsConnected && roomExists())
+        if(IsConnected && roomExists() && opponentExists())
         {
             
             try {
@@ -527,7 +559,7 @@ public class DatabaseController {
                     if(winner==-1)
                     {
                     
-                        if(Game.GamePlayer.tasSayisi==1)
+                        if(Game.Room.Opponent.tasSayisi==1)
                         {
                             Game.Room.Winner=Game.GamePlayer.ID;
                             Connection.createStatement().executeUpdate("UPDATE game_rooms SET r_winner="+Game.Room.Winner+" WHERE r_id="+Game.Room.ID);
@@ -537,7 +569,7 @@ public class DatabaseController {
                             JOptionPane.showMessageDialog(null, "Oyun Bitti, Siz Kazandınız "+Game.GamePlayer.name+" !");
                             
                         }
-                        else if(Game.Room.Opponent.tasSayisi==1)
+                        else if(Game.GamePlayer.tasSayisi==1)
                         {
                             Game.Room.Winner=Game.Room.Opponent.ID;
                             Connection.createStatement().executeUpdate("UPDATE game_rooms SET r_winner="+Game.Room.Winner+" WHERE r_id="+Game.Room.ID);
@@ -545,7 +577,7 @@ public class DatabaseController {
 
                             deleteRoom();
                             
-                            JOptionPane.showMessageDialog(null, "Oyun Bitti, KAYBETTİN! ");
+                            JOptionPane.showMessageDialog(null, "Oyun Bitti, KAYBETTİN!!! ");
                         }
                         
                     
@@ -621,6 +653,25 @@ public class DatabaseController {
     
     
     
+    public void deleteRoom(int rid){
+        if(IsConnected)
+        {            
+            try {
+                Connection.createStatement().executeUpdate("DELETE FROM game_grids WHERE g_roomId="+rid);
+                Connection.createStatement().executeUpdate("DELETE FROM game_rooms WHERE r_id="+rid);
+                
+                Game.GameController=new Controller_Lobby();
+                Game.Room=null;
+                
+                Game.UpdateFrame();
+
+            } catch (SQLException ex) {
+
+            }
+                   
+        }    
+    }//end deleteRoom(int rid)
+    
     
     
     public void addGrid(int roomId, int owner, int durum, int posX, int posY, int inRoomId){
@@ -639,7 +690,7 @@ public class DatabaseController {
             
             
             } catch (SQLException ex) {
-                System.out.println("Grid creation error: "+roomId+" -> "+inRoomId+" | "+posX+","+posY);
+                System.out.println("Grid oluşturma hatası: "+roomId+" -> "+inRoomId+" | "+posX+","+posY);
             }
         }
     }

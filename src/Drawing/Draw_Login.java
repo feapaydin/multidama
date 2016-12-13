@@ -19,7 +19,7 @@ public class Draw_Login extends Draw{
     public Draw_Login(){        
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("/arc/font/georgia.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("/Arc/font/georgia.ttf")));
         } catch (FontFormatException ex) {} catch (IOException ex) {}
         
         
@@ -38,7 +38,7 @@ public class Draw_Login extends Draw{
        
         
         
-        loadFormBackground("/arc/img/forms/form_login.jpg",g);
+        loadFormBackground("/Arc/img/forms/form_login.jpg",g);
         
         
         Font f=new Font("Georgia",Font.TRUETYPE_FONT,11);
@@ -50,7 +50,7 @@ public class Draw_Login extends Draw{
         ortaliYazi(Controller_Login.islemDurum,Game.GameWindow.window_height-155,f,Color.RED,g);
         
         
-        
+        Controller_Login.btnGiris.repaint();
         
     }
     

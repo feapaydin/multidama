@@ -17,11 +17,14 @@ public class Draw_Opening extends Draw{
     
     public void paint(Graphics g) {
        
+        
         BufferedImage img;
         try {               
-            img=ImageIO.read(getClass().getResourceAsStream("/arc/img/forms/form_opening.jpg"));
-            g.drawImage(img,0,0,Game.GameWindow.content_width,Game.GameWindow.content_height,null);
+            img=ImageIO.read(getClass().getResourceAsStream("/Arc/img/forms/form_opening.jpg"));
+            g.drawImage(img,0,0,794,571,null);
         } catch (IOException ex) {}
+        
+       
         
     }
     

@@ -13,8 +13,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 
@@ -26,7 +24,7 @@ public class Draw_Ingame extends Draw {
     public Draw_Ingame(){
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("/arc/font/georgia.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("/Arc/font/georgia.ttf")));
         } catch (FontFormatException ex) {} catch (IOException ex) {}
         
     }
@@ -41,7 +39,7 @@ public class Draw_Ingame extends Draw {
             g.fillRect(0,0,Game.GameWindow.window_width,Game.GameWindow.window_height);
 
 
-            loadFormBackground("/arc/img/forms/form_game.jpg",g);
+            loadFormBackground("/Arc/img/forms/form_game.jpg",g);
 
 
             //Oda bilgileri
@@ -52,7 +50,7 @@ public class Draw_Ingame extends Draw {
 
             //Kullanıcı Bilgileri
             try {
-                img=ImageIO.read(getClass().getResourceAsStream("/arc/img/forms/userBack.jpg"));
+                img=ImageIO.read(getClass().getResourceAsStream("/Arc/img/forms/userBack.jpg"));
                 g.drawImage(img,Game.GameWindow.window_width-img.getWidth()-30,300,img.getWidth(),img.getHeight(),null);
                 g.drawImage(img,25,300,img.getWidth(),img.getHeight(),null);
 
@@ -63,10 +61,10 @@ public class Draw_Ingame extends Draw {
             g.setFont(f);
 
             FontMetrics metric=g.getFontMetrics(f);  
-            g.drawString(Game.GamePlayer.name,Game.GameWindow.window_width-30-(img.getWidth()/2)-(metric.stringWidth(Game.GamePlayer.name)/2),350);
+            g.drawString(Game.GamePlayer.name+" ["+Game.GamePlayer.tasSayisi+"]",Game.GameWindow.window_width-30-(img.getWidth()/2)-(metric.stringWidth(Game.GamePlayer.name+" ["+Game.GamePlayer.tasSayisi+"]")/2),350);
             
             if(Game.Room.Opponent!=null)
-                g.drawString(Game.Room.Opponent.name,25+(img.getWidth()/2)-(metric.stringWidth(Game.Room.Opponent.name)/2),350);
+                g.drawString(Game.Room.Opponent.name+" ["+Game.Room.Opponent.tasSayisi+"]",25+(img.getWidth()/2)-(metric.stringWidth(Game.Room.Opponent.name+" ["+Game.Room.Opponent.tasSayisi+"]")/2),350);
             else
             {
                 String yazi="BEKLENİYOR...";
@@ -75,9 +73,13 @@ public class Draw_Ingame extends Draw {
             }
             
             try {
-                img=ImageIO.read(getClass().getResourceAsStream("/arc/img/forms/siraTac.jpg"));
+                img=ImageIO.read(getClass().getResourceAsStream("/Arc/img/forms/siraTac.jpg"));
                 if(Game.Room.PlayTurn==Game.GamePlayer.ID)
+                {
                     g.drawImage(img,Game.GameWindow.window_width-img.getWidth()-30-47,260,img.getWidth(),img.getHeight(),null);
+                    g.setColor(Color.RED);
+                    g.drawString("Sıra Sizde...",Game.GameWindow.window_width-150,400);
+                }
                 else
                     g.drawImage(img,25+47,260,img.getWidth(),img.getHeight(),null);
 
@@ -89,7 +91,7 @@ public class Draw_Ingame extends Draw {
             if(Controller_Ingame.GridList[0]!=null)
             for(int i=0; i<Controller_Ingame.GridList.length; i++)
             {
-
+                
                 Grid currentGrid=Controller_Ingame.GridList[i];  
 
                 String yol="";
@@ -151,14 +153,21 @@ public class Draw_Ingame extends Draw {
                 {
                     e.printStackTrace();
                 }
-
                 
-                Controller_Ingame.btnPeset.repaint();
-                Controller_Ingame.btnLobiyedon.repaint();
+                /*
+                //Grid Data
+                g.setColor(Color.BLUE);
+                g.setFont(new Font("Arial",Font.PLAIN,11));
+                g.drawString(currentGrid.posX+","+currentGrid.posY+" ("+currentGrid.ID+")",currentGrid.drawCoordX+5,currentGrid.drawCoordY+15);
+                g.drawString(currentGrid.durum+"",currentGrid.drawCoordX+5,currentGrid.drawCoordY+30);
+                if(currentGrid.owner!=null)
+                    g.drawString(currentGrid.owner.name+"",currentGrid.drawCoordX+5,currentGrid.drawCoordY+45);
+                */
                 
             }
 
-        
+            Controller_Ingame.btnPeset.repaint();
+            Controller_Ingame.btnLobiyedon.repaint();
         }
         
     }//End paint
