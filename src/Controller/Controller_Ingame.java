@@ -59,8 +59,8 @@ public class Controller_Ingame extends Controller{
         tmr=new Timer();
         tmr.scheduleAtFixedRate(ttask, 1000, 3000);
         
-        btnPeset=new Button("Pes Et",Game.GameWindow.window_width-150-30,450,150,25);
-        btnLobiyedon=new Button("Lobiye Dön",Game.GameWindow.window_width-150-30,485,150,25);
+        btnPeset=new Button("Pes Et",Game.GameWindow.window_width-150-30,470,150,25);
+        btnLobiyedon=new Button("Lobiye Dön",Game.GameWindow.window_width-150-30,505,150,25);
         Game.GameWindow.add(btnPeset);
         Game.GameWindow.add(btnLobiyedon);
         

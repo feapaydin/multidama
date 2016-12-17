@@ -9,18 +9,40 @@ public class InGameLogic {
     public static Grid islenen;
     public static ArrayList<Grid> moveable=new ArrayList<Grid>(); 
     public static ArrayList<Grid> mustmove=new ArrayList<Grid>();
+    
+    public static ArrayList<Grid> yiyebilen=new ArrayList<Grid>();
+    
+    public static boolean rendering=false;
+    
+    
 
     public static void clickedOnGrid(Grid g){
-
+        yiyebilen.clear();
+        
         if(g.durum!=0)
-        {            
+        {        
+            mustmove.clear();            
+        
             if(g.owner.ID==Game.GamePlayer.ID)
                 if(Game.Room.PlayTurn==Game.GamePlayer.ID)
                 {
                     if(g!=islenen)
                     {                        
+
+                        if(yemeZorunlulugu(islenen))
+                        {
+                            if(!yiyebilen.contains(g))
+                            {                                
+                                return;                    
+                            }                            
+                        }
+                        
+                        
                         islenen=g;            
                         checkMoveArea(g);
+                        Game.Room.LastMoved=-1;
+                        Game.Room.LastMovedFrom=-1;                       
+                        
                     }
                     else
                     {
@@ -59,6 +81,7 @@ public class InGameLogic {
                             g.durum=2;
                 }
                 
+                Game.GameDB.setLastMoved(g.ID,islenen.ID);
                 Game.GameDB.UpdateGrid(islenen);
                 Game.GameDB.UpdateGrid(g);                
                 Game.GameDB.setTurn(Game.Room.Opponent.ID);
@@ -84,7 +107,7 @@ public class InGameLogic {
                 if(g.yenecek!=null && g.yenecek!=g)
                 {                    
                     g.yenecek.durum=0;
-                    g.yenecek.owner=null;  
+                    g.yenecek.owner=null;
                     Game.GameDB.UpdateGrid(g.yenecek);
                     Game.Room.Opponent.tasSayisi-=1;    
                     Game.GameDB.UpdateTasSayisi();
@@ -106,6 +129,7 @@ public class InGameLogic {
                             g.durum=2;
                 }
                                 
+                Game.GameDB.setLastMoved(g.ID,islenen.ID);
                 Game.GameDB.UpdateGrid(islenen);
                 Game.GameDB.UpdateGrid(g);
                 
@@ -135,7 +159,6 @@ public class InGameLogic {
     
     public static void checkMoveArea(Grid g){
         moveable.clear();
-        mustmove.clear();
         
         int distance=2;
         
@@ -207,6 +230,7 @@ public class InGameLogic {
                             {                        
                                 mustEaten=true;
                                 ynck=g;
+                                yiyebilen.add(islenen);
                             }
                             else if(g.durum!=0 && g.owner==Game.GamePlayer)
                                 return;
@@ -216,7 +240,6 @@ public class InGameLogic {
                                 return;
                             
                         
-                        
                     }
 
                     if(nextGrid.ID!=g.ID)
@@ -224,6 +247,45 @@ public class InGameLogic {
                 }
             }
         }
+    }
+    
+    
+    
+    
+    
+    public static boolean yemeZorunlulugu(Grid mainIslenen){
+    
+        yiyebilen.clear();
+        System.out.println("Yeme zorunluluğu ölçülüyor.");
+        rendering=true;
+    
+        for(int i=0; i<Controller_Ingame.GridList.length; i++)
+        {
+            Grid g=Controller_Ingame.GridList[i];
+            
+            if(g.owner!=null)
+                if(g.owner.ID==Game.GamePlayer.ID)
+                {
+                    islenen=g;
+                    checkMoveArea(g);                                       
+                }
+        }
+        
+        rendering=false;
+        
+        islenen=mainIslenen;
+        
+        if(mustmove.isEmpty())
+            return false;
+        else
+        {
+            mustmove.clear();
+            moveable.clear();
+            return true;            
+        }
+            
+    
+    
     }
     
 

@@ -15,13 +15,15 @@ public class GridCheck implements Runnable{
     }
     
     public void run(){
-        if(checkClick(g))
-        {               
-            GameLogic.clickedOnGrid(g);           
-        }    
+        if(g!=null)
+            if(checkClick(g))
+            {               
+                GameLogic.clickedOnGrid(g);           
+            }    
     }
     
-    private boolean checkClick(Grid g){        
+    private boolean checkClick(Grid g){
+        
         if
         (
             Game.Mouse.x>g.drawCoordX && Game.Mouse.x<g.drawCoordX+GridSize 
@@ -31,5 +33,6 @@ public class GridCheck implements Runnable{
             return true;
         else
             return false;
+
     }
 }

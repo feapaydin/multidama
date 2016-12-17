@@ -12,6 +12,7 @@ public class Grid {
     public int posY;
     public short durum=0;    
     public Grid yenecek=null;
+    
     /*
     *   DURUM:
     *   0 - Boş

@@ -31,7 +31,7 @@ public class Draw_Ingame extends Draw {
     
 
     public void paint(Graphics g){
-        if(Game.Room!=null)
+        if(Game.Room!=null && Controller_Ingame.GameLogic.rendering==false)
         {
             
             
@@ -79,6 +79,12 @@ public class Draw_Ingame extends Draw {
                     g.drawImage(img,Game.GameWindow.window_width-img.getWidth()-30-47,260,img.getWidth(),img.getHeight(),null);
                     g.setColor(Color.RED);
                     g.drawString("Sıra Sizde...",Game.GameWindow.window_width-150,400);
+                    if(Controller_Ingame.GameLogic.yiyebilen.size()>0)
+                    {
+                        g.setColor(Color.BLUE);
+                        g.drawString("Taş Yemek",Game.GameWindow.window_width-150,420);
+                        g.drawString("Zorundasınız",Game.GameWindow.window_width-160,440);
+                    }
                 }
                 else
                     g.drawImage(img,25+47,260,img.getWidth(),img.getHeight(),null);
@@ -94,75 +100,84 @@ public class Draw_Ingame extends Draw {
                 
                 Grid currentGrid=Controller_Ingame.GridList[i];  
 
-                String yol="";
-                g.setColor(currentGrid.bgColor);     
+                if(currentGrid!=null)
+                {
+                    g.setColor(currentGrid.bgColor);  
 
-                if(Controller_Ingame.GameLogic.moveable.contains(currentGrid))
-                    yol=Controller_Ingame.Grid_Moveable_Img;
-
-                if(Controller_Ingame.GameLogic.mustmove.contains(currentGrid))
-                    yol=Controller_Ingame.Grid_Mustmove_Img;
-
-                 if(Controller_Ingame.GameLogic.islenen!=null)
-                    if(Controller_Ingame.GameLogic.islenen.ID==currentGrid.ID)
-                        yol=currentGrid.durum==1?Controller_Ingame.Grid_Click_Img:Controller_Ingame.Grid_Click_Dama_Img;
-
-                g.fillRect(currentGrid.drawCoordX,currentGrid.drawCoordY,Controller_Ingame.GridSize,Controller_Ingame.GridSize);
-
-
-
-
-
-                if(yol.length()==0)
                     if(currentGrid.owner!=null)
-                        if(currentGrid.owner.ID==Game.GamePlayer.ID)
-                            switch(currentGrid.durum)
-                            {
-                                case 0:
-                                    yol=Controller_Ingame.Grid_Bos_Img;
-                                    break;
-                                case 1:
-                                    yol=Controller_Ingame.Grid_Tas_Img;
-                                    break;
-                                case 2:
-                                    yol=Controller_Ingame.Grid_Dama_Img;
-                                    break;
-                            }
-                        else
-                            switch(currentGrid.durum)
-                            {
-                                case 0:
-                                    yol=Controller_Ingame.Grid_Bos_Img;
-                                    break;
-                                case 1:
-                                    yol=Controller_Ingame.Grid_Tas_Dusman_Img;
-                                    break;
-                                case 2:
-                                    yol=Controller_Ingame.Grid_Dama_Dusman_Img;
-                                    break;
-                            }
+                        if(Game.Room.LastMoved==currentGrid.ID && currentGrid.owner.ID!=Game.GamePlayer.ID)
+                            g.setColor(Color.GREEN);
+
+                    if(Game.Room.LastMovedFrom==currentGrid.ID && Game.Room.PlayTurn==Game.GamePlayer.ID)
+                        g.setColor(Color.YELLOW);
+
+                    g.fillRect(currentGrid.drawCoordX,currentGrid.drawCoordY,Controller_Ingame.GridSize,Controller_Ingame.GridSize);
+
+
+                    String yol="";
+                    if(Controller_Ingame.GameLogic.moveable.contains(currentGrid))
+                        yol=Controller_Ingame.Grid_Moveable_Img;
+
+                    if(Controller_Ingame.GameLogic.mustmove.contains(currentGrid))
+                        yol=Controller_Ingame.Grid_Mustmove_Img;
+
+                     if(Controller_Ingame.GameLogic.islenen!=null)
+                        if(Controller_Ingame.GameLogic.islenen.ID==currentGrid.ID)
+                            yol=currentGrid.durum==1?Controller_Ingame.Grid_Click_Img:Controller_Ingame.Grid_Click_Dama_Img;
+
+
+
+                    if(yol.length()==0)
+                        if(currentGrid.owner!=null)
+                            if(currentGrid.owner.ID==Game.GamePlayer.ID)
+                                switch(currentGrid.durum)
+                                {
+                                    case 0:
+                                        yol=Controller_Ingame.Grid_Bos_Img;
+                                        break;
+                                    case 1:
+                                        yol=Controller_Ingame.Grid_Tas_Img;
+                                        break;
+                                    case 2:
+                                        yol=Controller_Ingame.Grid_Dama_Img;
+                                        break;
+                                }
+                            else
+                                switch(currentGrid.durum)
+                                {
+                                    case 0:
+                                        yol=Controller_Ingame.Grid_Bos_Img;
+                                        break;
+                                    case 1:
+                                        yol=Controller_Ingame.Grid_Tas_Dusman_Img;
+                                        break;
+                                    case 2:
+                                        yol=Controller_Ingame.Grid_Dama_Dusman_Img;
+                                        break;
+                                }
 
 
 
 
-                try
-                {
-                    img=ImageIO.read(getClass().getResourceAsStream(yol));               
-                    g.drawImage(img,currentGrid.drawCoordX,currentGrid.drawCoordY,Controller_Ingame.GridSize,Controller_Ingame.GridSize,null);
-                }catch(IOException e)
-                {
-                    e.printStackTrace();
+                    try
+                    {
+                        img=ImageIO.read(getClass().getResourceAsStream(yol));               
+                        g.drawImage(img,currentGrid.drawCoordX,currentGrid.drawCoordY,Controller_Ingame.GridSize,Controller_Ingame.GridSize,null);
+                    }catch(IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    /*
+                    //Grid Data
+                    g.setColor(Color.BLUE);
+                    g.setFont(new Font("Arial",Font.PLAIN,11));
+                    g.drawString(currentGrid.posX+","+currentGrid.posY+" ("+currentGrid.ID+")",currentGrid.drawCoordX+5,currentGrid.drawCoordY+15);
+                    g.drawString(currentGrid.durum+"",currentGrid.drawCoordX+5,currentGrid.drawCoordY+30);
+                    if(currentGrid.owner!=null)
+                        g.drawString(currentGrid.owner.name+"",currentGrid.drawCoordX+5,currentGrid.drawCoordY+45);
+                    */
                 }
-                
-                /*
-                //Grid Data
-                g.setColor(Color.BLUE);
-                g.setFont(new Font("Arial",Font.PLAIN,11));
-                g.drawString(currentGrid.posX+","+currentGrid.posY+" ("+currentGrid.ID+")",currentGrid.drawCoordX+5,currentGrid.drawCoordY+15);
-                g.drawString(currentGrid.durum+"",currentGrid.drawCoordX+5,currentGrid.drawCoordY+30);
-                if(currentGrid.owner!=null)
-                    g.drawString(currentGrid.owner.name+"",currentGrid.drawCoordX+5,currentGrid.drawCoordY+45);
-                */
                 
             }
 

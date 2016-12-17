@@ -267,6 +267,55 @@ public class DatabaseController {
     } //End GetGridList()
     
     
+    
+    public void getLastMoved(){
+        if(IsConnected && roomExists() && opponentExists() && Controller_Ingame.GameLogic.islenen==null)
+        {
+            try{
+                ResultSet rt=Connection.createStatement().executeQuery("SELECT r_lastMove, r_lastMoveFrom FROM game_rooms WHERE r_id="+Game.Room.ID);
+                if(rt.next())
+                {
+                    Game.Room.LastMoved=rt.getInt("r_lastMove");
+                    Game.Room.LastMovedFrom=rt.getInt("r_lastMoveFrom");
+                  
+                }
+                else
+                {
+                    Game.Room.LastMoved=-1;
+                    Game.Room.LastMovedFrom=-1;
+                }
+            }catch(Exception e)
+            {
+                Game.Room.LastMoved=-1;
+                Game.Room.LastMovedFrom=-1;
+            }
+        
+        }  
+        else
+        {
+            Game.Room.LastMoved=-1;
+        }
+    }
+    
+    
+    public void setLastMoved(int lastmoveId, int fromId)
+    {
+        if(IsConnected && roomExists() && opponentExists())
+        {
+            try{
+                Connection.createStatement().executeUpdate("UPDATE game_rooms SET r_lastMove="+lastmoveId+", r_lastMoveFrom="+fromId+" WHERE r_id="+Game.Room.ID);
+                
+            }catch(Exception e)
+            {
+               System.out.println("Son oynanan düzenlenemedi.");
+            }
+        
+        }  
+    }
+    
+    
+    
+    
     //Sıra çek
     public int getTurn(){
         if(IsConnected  && roomExists())
@@ -307,7 +356,6 @@ public class DatabaseController {
                         query+="r_p1="+Game.Room.Opponent.ID+" AND r_p2="+Game.GamePlayer.ID;
                     
                     Game.Room.PlayTurn=playerId;
-                    System.out.println("Turn Setted.");
                     if(Connection.createStatement().executeUpdate(query)>0)
                         return true;
                     else
@@ -507,6 +555,7 @@ public class DatabaseController {
                     UpdateLastOnline();
                     
                     getTasSayisi();
+                    getLastMoved();
 
                     if(Controller_Ingame.GameLogic.islenen==null)
                         GetGridList();
@@ -559,7 +608,7 @@ public class DatabaseController {
                     if(winner==-1)
                     {
                     
-                        if(Game.Room.Opponent.tasSayisi==1)
+                        if(Game.Room.Opponent.tasSayisi==0)
                         {
                             Game.Room.Winner=Game.GamePlayer.ID;
                             Connection.createStatement().executeUpdate("UPDATE game_rooms SET r_winner="+Game.Room.Winner+" WHERE r_id="+Game.Room.ID);
@@ -569,7 +618,7 @@ public class DatabaseController {
                             JOptionPane.showMessageDialog(null, "Oyun Bitti, Siz Kazandınız "+Game.GamePlayer.name+" !");
                             
                         }
-                        else if(Game.GamePlayer.tasSayisi==1)
+                        else if(Game.GamePlayer.tasSayisi==0)
                         {
                             Game.Room.Winner=Game.Room.Opponent.ID;
                             Connection.createStatement().executeUpdate("UPDATE game_rooms SET r_winner="+Game.Room.Winner+" WHERE r_id="+Game.Room.ID);
